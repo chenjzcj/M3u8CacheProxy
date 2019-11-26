@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity implements CacheProxyCallbac
         mPlayer = (StandardGSYVideoPlayer) findViewById(R.id.video_player);
         mVideoView = (VideoView) findViewById(R.id.video_view);
 
-//        M3u8Server.execute();
-//        mPlayer.setUp("http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8",false);
+        //M3u8Server.execute();
+        //mPlayer.setUp("http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8",false);
         mProxyManager = App.instance.getCacheProxy();
         mProxyManager.addCallback(this);
 
@@ -41,12 +41,12 @@ public class MainActivity extends AppCompatActivity implements CacheProxyCallbac
 
     public void onFileSequence(View v){
         String path3 = Environment.getExternalStorageDirectory().getAbsolutePath() + "/AAA/fileSequence/fileSequence.m3u8";
-//        mPlayer.setUp(mVideoSource,false);
-//        mVideoView.setVideoPath(mVideoSource);
-//        mPlayer.setUp("http://127.0.0.1:2341/fileSequence/fileSequence.m3u8",false);
-//        mPlayer.setUp("http://192.168.1.17:8000/mmm.m3u8",false);
+        //        mPlayer.setUp(mVideoSource,false);
+        //        mVideoView.setVideoPath(mVideoSource);
+        //        mPlayer.setUp("http://127.0.0.1:2341/fileSequence/fileSequence.m3u8",false);
+        //        mPlayer.setUp("http://192.168.1.17:8000/mmm.m3u8",false);
         mVideoView.setVideoPath("http://127.0.0.1:2341/fileSequence/fileSequence.m3u8");
-//        mPlayer.startPlayLogic();
+        //        mPlayer.startPlayLogic();
         mVideoView.start();
     }
 

@@ -25,11 +25,11 @@ public class App extends Application {
     }
 
 
-    public CacheProxyManager getCacheProxy(){
+    public CacheProxyManager getCacheProxy() {
         if (mCacheProxyManager == null) {
             try {
-                File file = new File( Environment.getExternalStorageDirectory().getAbsolutePath(),"AAA");
-                if (!file.exists()){
+                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "AAA");
+                if (!file.exists()) {
                     file.mkdir();
                 }
                 mCacheProxyManager = new CacheProxyManager.Build(this)

@@ -1,5 +1,6 @@
 package com.wangw.m3u8cahceproxy;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,7 +27,7 @@ public class CacheProxyManager implements TsListDownLoadCallback {
     private static final int STATE_FAILED = -1;
     private static final int STATE_ALLOWPLAY = 1;
 
-   private final  Config mConfig;
+    private final Config mConfig;
     private final ExecutorService mRequestPool = Executors.newFixedThreadPool(5);
     private PlayProxyServer mServer;
     private List<CacheProxyCallback> mCallbacks = new CopyOnWriteArrayList<>();
@@ -41,25 +42,24 @@ public class CacheProxyManager implements TsListDownLoadCallback {
         mServer = new PlayProxyServer(mConfig);
     }
 
-    public void start(List<Extinfo> list, String name){
+    public void start(List<Extinfo> list, String name) {
         TsListDownloadRun tsListDownloadRun = new TsListDownloadRun(mConfig, list, name);
         tsListDownloadRun.setCallback(this);
         mRequestPool.submit(tsListDownloadRun);
     }
 
 
-    public void addCallback(CacheProxyCallback callback){
+    public void addCallback(CacheProxyCallback callback) {
         mCallbacks.add(callback);
     }
 
-    public void removeCallback(CacheProxyCallback callback){
+    public void removeCallback(CacheProxyCallback callback) {
         mCallbacks.remove(callback);
     }
 
     @Override
-    public void allowPlay(String name,String uri) {
-        mHandler.obtainMessage(STATE_ALLOWPLAY,new Pair<String,String>(name,uri))
-        .sendToTarget();
+    public void allowPlay(String name, String uri) {
+        mHandler.obtainMessage(STATE_ALLOWPLAY, new Pair<>(name, uri)).sendToTarget();
     }
 
     @Override
@@ -68,42 +68,43 @@ public class CacheProxyManager implements TsListDownLoadCallback {
     }
 
     @Override
-    public void downloadFailed(String name,CacheProxyException e) {
-        mHandler.obtainMessage(STATE_FAILED,new Pair<String,CacheProxyException>(name,e))
-        .sendToTarget();
+    public void downloadFailed(String name, CacheProxyException e) {
+        mHandler.obtainMessage(STATE_FAILED, new Pair<>(name, e)).sendToTarget();
     }
 
 
+    @SuppressLint("HandlerLeak")
+    class NotifyHolder extends Handler {
 
-    class NotifyHolder extends Handler{
-
-        public NotifyHolder() {
+        NotifyHolder() {
             super(Looper.getMainLooper());
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            onCallback(msg.what,msg.obj);
+            onCallback(msg.what, msg.obj);
         }
 
-        private void onCallback(int state,Object obj){
+        private void onCallback(int state, Object obj) {
             for (CacheProxyCallback callback : mCallbacks) {
-                switch (state){
+                switch (state) {
                     case STATE_ALLOWPLAY:
-                        Pair<String,String> pair = (Pair<String, String>) obj;
-                        callback.onStartPlay(pair.first,pair.second);
+                        Pair<String, String> pair = (Pair<String, String>) obj;
+                        callback.onStartPlay(pair.first, pair.second);
                         break;
                     case STATE_FAILED:
-                        Pair<String,CacheProxyException> pair2 = (Pair<String, CacheProxyException>) obj;
-                        callback.onError(pair2.first,pair2.second);
+                        Pair<String, CacheProxyException> pair2 = (Pair<String, CacheProxyException>) obj;
+                        callback.onError(pair2.first, pair2.second);
+                        break;
+                    default:
                         break;
                 }
             }
         }
     }
 
-    public static class Build{
+    public static class Build {
         private File mCacheRoot;
         private String mHost;
         private int mProt;
@@ -128,12 +129,12 @@ public class CacheProxyManager implements TsListDownLoadCallback {
             return new CacheProxyManager(buildConfig());
         }
 
-       private Config buildConfig() {
-           return new Config(mCacheRoot,mHost,mProt);
-       }
+        private Config buildConfig() {
+            return new Config(mCacheRoot, mHost, mProt);
+        }
 
 
-   }
+    }
 
 
 }
